@@ -1,0 +1,31 @@
+{
+  "name": "node_basic_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "cross-env NODE_ENV=development nodemon Server.js --time --node-args=\"-r dotenv-flow/config -r esm\"",
+    "start": "cross-env NODE_ENV=production nodemon Server.js --time --node-args=\"-r dotenv-flow/config -r esm\"",
+    "serve": "nodemon Server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.2",
+    "fs": "0.0.1-security",
+    "joi": "^17.11.0",
+    "jsonwebtoken": "^9.0.2",
+    "log4js": "^6.5.2",
+    "logger": "^0.0.1",
+    "mongoose": "^8.0.3",
+    "nodemon": "^2.0.22",
+    "socket.io": "^4.7.2"
+  }
+}
