@@ -3,10 +3,11 @@ const { Schema } = mongoose;
 
 const userSchema = Schema(
   {
-    name: { type: String },
+    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    userRole: { type: String }, //admin , user
+    location: { type: mongoose.Schema.Types.ObjectId, ref: "Location", },
+    userRole: { type: String }, //admin , user ,superAdmin
     status: { type: String }, // active , inactive
   },
   {

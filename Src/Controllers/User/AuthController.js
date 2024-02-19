@@ -30,13 +30,16 @@ module.exports = {
   },
 
   doLogin: async (req, res) => {
-    let user = req.body;
     try {
-      let User = await UserService.getUser(user.email);
+      let decryptedData = MiscService.deCryptQuery(req.body.encryptedCredentials);
+      if (!decryptedData?.email) {
+        res.status(400).json(MiscService.response(400, process.env.BODY_NULL, {}));
+      }
+      let User = await UserService.getUser(decryptedData.email);
       if (User) {
-        (passwordVerification = await MiscService.verifyPassword(user.password, User.password)),
+        (passwordVerification = await MiscService.verifyPassword(decryptedData.password, User.password)),
           (token = MiscService.generateToken(User._id)),
-          (selectedItemUser = await MiscService.generateUser(User)),
+          (selectedItemUser = MiscService.generateUser(User)),
           res.status(200).json(MiscService.response(200, process.env.SUCCESS, { token, selectedItemUser }))
       }
       else {
@@ -52,7 +55,7 @@ module.exports = {
     try {
       const userAdmin = {
         name: "Admin",
-        userRole: "admin",
+        userRole: "superAdmin",
         email: "Admin@gmail.com",
         status: "active",
         password: "Admin@7034"
@@ -66,7 +69,6 @@ module.exports = {
         .json(MiscService.response(200, process.env.SUCCESS, { user: { email: data?.newUser?.email } }));
 
     } catch (error) {
-      console.log(error)
       res.status(400).json(MiscService.response(400, error.error || process.env.WRONG_SOMETHING, {}));
     }
   }

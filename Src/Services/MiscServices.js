@@ -1,6 +1,6 @@
 const becrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const crypto = require('crypto-js');
+const CryptoJS = require('crypto-js');
 
 module.exports = {
   encryptPassword: (string) => {
@@ -19,7 +19,7 @@ module.exports = {
   verifyToken: (token) => {
     return jwt.verify(token, process.env.JWT_SECRET);
   },
-  
+
   response: (error_code, message, data) => {
     return {
       status_code: error_code,
@@ -27,18 +27,30 @@ module.exports = {
       data: data
     }
   },
-  generateUser: async (user) => {
+  generateUser: (user) => {
     try {
       const encryptionKey = process.env.ENCRYPT_USER_KEY;
-      const iv = process.env.INITIALIZATION_VECTOR;
-
       const { name, email, userRole, _id } = user;
       const selectedUser = { name, email, userRole, _id };
 
-      const cipher = crypto.AES.encrypt(JSON.stringify(selectedUser), encryptionKey, { iv });
-      return cipher.toString();
+      const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(selectedUser), encryptionKey).toString();
+      return encryptedData;
     } catch (error) {
       throw error
+    }
+  },
+  deCryptQuery: (user) => {
+    const secret_key = "RIJO-MENU-ENCRYPTION-PURPOSE";
+    try {
+      const bytes = CryptoJS.AES.decrypt(user, secret_key);
+      const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+      if (!decryptedData) {
+        throw new Error('Decrypted data is empty');
+      }
+      return JSON.parse(decryptedData);
+    } catch (error) {
+      console.error('Error decrypting data:', error);
+      return null; // or handle the error in another way
     }
   },
 };

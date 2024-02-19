@@ -9,7 +9,7 @@ const { notFound, errorHandler } = require("./Src/Middlewares/errorHandler");
 
 dotenv.config();
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: 'http://localhost:3001',
   methods: '*'
 }
 app.use(cors(corsOptions));
