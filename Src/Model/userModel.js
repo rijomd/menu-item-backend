@@ -8,7 +8,7 @@ const userSchema = Schema(
     password: { type: String, required: true },
     location: { type: mongoose.Schema.Types.ObjectId, ref: "Location", },
     userRole: { type: String }, //admin , user ,superAdmin
-    status: { type: String }, // active , inactive
+    status: { type: String }, // Active , InActive
   },
   {
     timestamps: true,
