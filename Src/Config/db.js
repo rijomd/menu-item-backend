@@ -7,7 +7,7 @@ const connectDB = async () => {
     const dbConnection = mongoose.connection;
     dbConnection.on('error', console.error.bind(console, 'Connection error:'));
     dbConnection.once('open', () => {
-      console.log(dbConnection, "MongoDB Connected");
+      console.log("MongoDB Connected");
     });
     return dbConnection;
   } catch (error) {
