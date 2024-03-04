@@ -29,11 +29,11 @@ module.exports = {
   },
   generateUser: (user) => {
     try {
-      const encryptionKey = process.env.ENCRYPT_USER_KEY;
+      const secret_key = "RIJO-MENU-ENCRYPTION-PURPOSE";
       const { name, email, userRole, _id, location } = user;
-      const selectedUser = { name, email, userRole, _id, location: location.toString() };
+      const selectedUser = { name, email, userRole, _id, location: location?.toString() || "headLocation" };
 
-      const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(selectedUser), encryptionKey).toString();
+      const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(selectedUser), secret_key).toString();
       return encryptedData;
     } catch (error) {
       throw error

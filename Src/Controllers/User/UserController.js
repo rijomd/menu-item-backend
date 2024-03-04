@@ -26,15 +26,15 @@ const insertUser = async (req, res) => {
 
 const userList = async (req, res) => {
     const query = req.body || {};
-    // let user = req.user;
+    let user = req.user;
     try {
-        // query._id = { $ne: user._id  };
-        // query.location = { $eq: user.location };
+        query._id = { $ne: user._id };
+        user.location ? query.location = { $eq: user.location } : '';
 
         const fields = '_id name email location userRole status createdAt';
         const userList = await list(modelName, query, fields, ['location'], 'name');
         const lists = userList?.length > 0 && [...userList].map((item) => {
-            const {_id, name, email, userRole, status, createdAt } = item;
+            const { _id, name, email, userRole, status, createdAt } = item;
             return {
                 _id, name, email, userRole, status, createdAt,
                 location: item?.location?.name || 'Head Location', locationId: item?.location?._id || ''
