@@ -30,8 +30,8 @@ module.exports = {
   generateUser: (user) => {
     try {
       const encryptionKey = process.env.ENCRYPT_USER_KEY;
-      const { name, email, userRole, _id } = user;
-      const selectedUser = { name, email, userRole, _id };
+      const { name, email, userRole, _id, location } = user;
+      const selectedUser = { name, email, userRole, _id, location: location.toString() };
 
       const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(selectedUser), encryptionKey).toString();
       return encryptedData;

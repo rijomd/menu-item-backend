@@ -12,6 +12,10 @@ const getModalPath = async (table) => {
     return Modal ? Modal : "Table";
 }
 
+const populateQuery = (populateField, selectField) => populateField.map(field => {
+    return { path: field, select: selectField };
+});
+
 const create = async (table, body) => {
     try {
         const Modal = await getModalPath(table);
@@ -32,10 +36,10 @@ const update = async (table, body, filter) => {
     }
 }
 
-const list = async (table, body, fields) => {
+const list = async (table, body, fields, populateField = [], selectFieldPopulate) => {
     try {
         const Modal = await getModalPath(table);
-        return await Modal.find(body, fields);
+        return await Modal.find(body, fields).populate(populateQuery(populateField, selectFieldPopulate));
     } catch (error) {
         throw new Error(error);
     }
@@ -60,6 +64,7 @@ const getSingleData = async (table, filter) => {
         throw new Error(error);
     }
 }
+
 
 module.exports = {
     create, list, update, deleteData, getSingleData

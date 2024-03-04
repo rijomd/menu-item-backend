@@ -1,5 +1,5 @@
 const MiscService = require("../../Services/MiscServices");
-const { create, update, deleteData, list } = require("../../General/CrudOperations");
+const { create, update, deleteData, list, getCompo } = require("../../General/CrudOperations");
 
 const modelName = "Location";
 
@@ -45,6 +45,21 @@ const deleteLocation = async (req, res) => {
     }
 }
 
+const locationCompo = async (req, res) => {
+    try {
+        const fields = '_id name';
+        const locationList = await list(modelName, { status: 'Active' }, fields);
+        const compo = locationList.map((item) => {
+            return { label: item.name, value: item._id }
+        });
+        res.status(200).json(MiscService.response(200, process.env.SUCCESS, { locationCompo: compo || [] }));
+    } catch (error) {
+        console.log(error)
+        res.status(400).json(MiscService.response(400, error.message || process.env.WRONG_SOMETHING, {}));
+    }
+}
+
+
 module.exports = {
-    insertLocation, locationList, deleteLocation
+    insertLocation, locationList, deleteLocation, locationCompo
 }
