@@ -1,3 +1,7 @@
+const CryptoJS = require('crypto-js');
+const fs = require('fs');
+const path = require('path');
+
 const MiscServices = require("../Services/MiscServices");
 const UserService = require("../Services/UserService");
 
@@ -31,7 +35,6 @@ module.exports = {
   AutherizedUser: async (socket, next) => {
     const token = socket.handshake?.headers?.["my-token"]?.split(" ")[1];
     if (!token) {
-      console.log("Not Autherized Connection");
       next(new Error("unauthorized event"));
     }
     else {
@@ -43,5 +46,35 @@ module.exports = {
       }
       next();
     }
-  }
+  },
+
+  deCryptQuery: async (req, res, next) => {
+    const secret_key = "RIJO-MENU-ENCRYPTION-PURPOSE";
+    const requestData = req.body.encryptedCredentials;
+
+    if (requestData) {
+      try {
+        const bytes = CryptoJS.AES.decrypt(requestData, secret_key);
+        const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+        if (!decryptedData) {
+          throw new Error('Decrypted data is empty');
+        }
+        let data = JSON.parse(decryptedData);
+        if (req.file?.filename) {
+          data = { ...data, file: req.file?.filename }
+          // imageUrl: `http://localhost:3001/uploads/${filename}`
+        }
+        req.body = data;
+        next();
+      } catch (error) {
+        console.log(error);
+        res.status(401).json(MiscServices.response(401, process.env.UN_AUTHORIZED, {}));
+      }
+    }
+    else {
+      res.status(401).json(MiscServices.response(401, process.env.UN_AUTHORIZED, {}));
+    }
+
+  },
+
 }
