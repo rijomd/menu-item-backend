@@ -8,7 +8,7 @@ module.exports = {
 
   getUser: (email) => {
     try {
-      let data = UserModel.findOne({ email });
+      let data = UserModel.findOne({ email }).populate('location');
       if (!data) {
         throw error;
       }

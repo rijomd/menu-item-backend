@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require('path');
 const dotenv = require("dotenv");
 const app = express();
 
@@ -14,7 +15,8 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(express.static('src/uploads'));
+app.use('/images', express.static(path.join(__dirname, 'Src', 'Images')));
+
 // connect MongoDB Using Mongoose
 connectDB();
 

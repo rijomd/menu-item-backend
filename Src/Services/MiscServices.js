@@ -31,8 +31,11 @@ module.exports = {
     try {
       const secret_key = "RIJO-MENU-ENCRYPTION-PURPOSE";
       const { name, email, userRole, _id, location } = user;
-      const selectedUser = { name, email, userRole, _id, location: location?.toString() || "headLocation" };
-
+      const selectedUser = {
+        name, email, userRole, _id,
+        location: location._id?.toString() || "", locationName: location?.name,
+      };
+      console.log(selectedUser, 'selectedUser');
       const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(selectedUser), secret_key).toString();
       return encryptedData;
     } catch (error) {

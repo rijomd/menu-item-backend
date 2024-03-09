@@ -17,7 +17,7 @@ module.exports = {
         token = req.headers.authorization.split(" ")[1];
         const decoded = await MiscServices.verifyToken(token);
         let user = await UserService.getUserByid(decoded.id)
-        if (user) {
+        if (user && user.status === 'Active') {
           req.user = user;
           req.user.token = token
         }

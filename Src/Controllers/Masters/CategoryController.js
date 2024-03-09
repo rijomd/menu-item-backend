@@ -7,8 +7,7 @@ const modelName = "Category";
 const insertCategory = async (req, res) => {
     let query = req.body;
     let response;
-    query = { ...query, image: image.file }
-    console.log(query, 'query');
+    query = { ...query, image: query.file }
     try {
         if (query._id) {
             response = await update(modelName, query, { _id: query._id });

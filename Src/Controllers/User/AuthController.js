@@ -37,10 +37,15 @@ module.exports = {
       }
       let User = await UserService.getUser(decryptedData.email);
       if (User) {
-        (passwordVerification = await MiscService.verifyPassword(decryptedData.password, User.password)),
-          (token = MiscService.generateToken(User._id)),
-          (selectedItemUser = MiscService.generateUser(User)),
-          res.status(200).json(MiscService.response(200, process.env.SUCCESS, { token, selectedItemUser }))
+        if (User.status === 'Active') {
+          (passwordVerification = await MiscService.verifyPassword(decryptedData.password, User.password)),
+            (token = MiscService.generateToken(User._id)),
+            (selectedItemUser = MiscService.generateUser(User)),
+            res.status(200).json(MiscService.response(200, process.env.SUCCESS, { token, selectedItemUser }))
+        }
+        else {
+          res.status(400).json(MiscService.response(400, process.env.USER_INACTIVE, {}));
+        }
       }
       else {
         res.status(400).json(MiscService.response(400, process.env.NO_USER_FOUND, {}));
