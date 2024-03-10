@@ -1,4 +1,4 @@
-const { UserModel } = require("../Model/userModel");
+const { User } = require("../Model/userModel");
 
 const log4js = require("log4js");
 const logger = log4js.getLogger();
@@ -8,7 +8,7 @@ module.exports = {
 
   getUser: (email) => {
     try {
-      let data = UserModel.findOne({ email }).populate('location');
+      let data = User.findOne({ email }).populate('location');
       if (!data) {
         throw error;
       }
@@ -19,16 +19,16 @@ module.exports = {
   },
 
   createUser: (user) => {
-    return UserModel.create(user);
+    return User.create(user);
   },
 
   getUserByid: (id) => {
-    return UserModel.findById(id).select("-password")
+    return User.findById(id).select("-password")
   },
 
   getUserList: async (query, loggedInUserId) => {
     try {
-      const user = UserModel.aggregate([
+      const user = User.aggregate([
         { $match: query },
         {
           $lookup: {

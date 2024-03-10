@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const { Location } = require("./locationModel");
+
 const userSchema = Schema(
   {
     name: { type: String, required: true },
@@ -16,5 +18,5 @@ const userSchema = Schema(
 );
 module.exports = {
   userSchema,
-  UserModel: mongoose.model("User", userSchema)
+  User: mongoose.model("User", userSchema)
 }

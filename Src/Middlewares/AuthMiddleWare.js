@@ -62,7 +62,6 @@ module.exports = {
         let data = JSON.parse(decryptedData);
         if (req.file?.filename) {
           data = { ...data, file: req.file?.filename }
-          // imageUrl: `http://localhost:3001/uploads/${filename}`
         }
         req.body = data;
         next();

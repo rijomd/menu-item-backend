@@ -38,8 +38,13 @@ const update = async (table, body, filter) => {
 
 const list = async (table, body, fields, populateField = [], selectFieldPopulate) => {
     try {
-        const Modal = await getModalPath(table);
-        return await Modal.find(body, fields).sort({ updatedAt: -1 }).populate(populateQuery(populateField, selectFieldPopulate));
+        const populateFields = populateQuery(populateField, selectFieldPopulate);
+        if (populateFields) {
+            const Modal = await getModalPath(table);
+            if (Modal) {
+                return await Modal.find(body, fields).sort({ updatedAt: -1 }).populate(populateFields);
+            }
+        }
     } catch (error) {
         throw new Error(error);
     }

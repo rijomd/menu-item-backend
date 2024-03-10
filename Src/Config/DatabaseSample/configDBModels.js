@@ -15,6 +15,11 @@ const modelsPath = [
         schemaName: "categorySchema",
         path: "categoryModel"
     },
+    {
+        modalName: "Item",
+        schemaName: "itemSchema",
+        path: "itemModel"
+    },
 ];
 
 module.exports = {
