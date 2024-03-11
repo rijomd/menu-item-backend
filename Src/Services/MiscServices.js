@@ -33,7 +33,7 @@ module.exports = {
       const { name, email, userRole, _id, location } = user;
       const selectedUser = {
         name, email, userRole, _id,
-        location: location._id?.toString() || "", locationName: location?.name,
+        location: location?._id?.toString() || "", locationName: location?.name,
       };
       const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(selectedUser), secret_key).toString();
       return encryptedData;
