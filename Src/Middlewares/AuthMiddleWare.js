@@ -50,8 +50,7 @@ module.exports = {
 
   deCryptQuery: async (req, res, next) => {
     const secret_key = "RIJO-MENU-ENCRYPTION-PURPOSE";
-    const requestData = req.body.encryptedCredentials;
-
+    const requestData = req.body.encryptedCredentials 
     if (requestData) {
       try {
         const bytes = CryptoJS.AES.decrypt(requestData, secret_key);
@@ -71,7 +70,7 @@ module.exports = {
       }
     }
     else {
-      res.status(401).json(MiscServices.response(401, process.env.UN_AUTHORIZED, {}));
+      next();
     }
 
   },

@@ -1,6 +1,7 @@
 
 const MiscService = require("../../Services/MiscServices");
 const { create, update, list } = require("../../General/CrudOperations");
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const modelName = "Item";
 
@@ -23,7 +24,10 @@ const insertItem = async (req, res) => {
 }
 
 const ItemList = async (req, res) => {
-    const query = req.body || {};
+    const query = {};
+    if (req.query?.category) {
+        query.category = new ObjectId(req.query.category)
+    }
     let user = req.user;
     try {
         const fields = '_id name image status offer createdAt location sellingPrice quantity category';
