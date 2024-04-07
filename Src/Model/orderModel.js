@@ -11,7 +11,7 @@ const orderSchema = Schema(
         cancelComment: { type: String },
         itemList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Item" }],
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-        status: { type: String, enum: ['Open', 'Closed', 'Cancelled'], default: 'Open' },
+        status: { type: String, enum: ['Open', 'Closed', 'Cancelled', 'Approved'], default: 'Open' },
     },
     {
         timestamps: true,

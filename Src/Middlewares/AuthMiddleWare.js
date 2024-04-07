@@ -69,10 +69,9 @@ module.exports = {
         res.status(401).json(MiscServices.response(401, process.env.UN_AUTHORIZED, {}));
       }
     }
-    else {
-      next();
+    else{
+      res.status(401).json(MiscServices.response(401, process.env.UN_AUTHORIZED, {}));
     }
-
   },
 
 }
