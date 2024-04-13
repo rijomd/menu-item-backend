@@ -3,8 +3,35 @@ const MiscService = require("../../Services/MiscServices");
 const { create, update, list } = require("../../General/CrudOperations");
 const { Order } = require("../../Model/orderModel");
 const { Misc } = require("../../Model/miscModel");
+const { updateItemQuantity } = require("../../Controllers/Masters/ItemController");
 
 const modelName = "Order";
+
+const itemAvailability = async (itemList) => {
+    const ids = [];
+    const errors = [];
+    const entries = [];
+
+    itemList.map(item => ids.push(item._id));
+    let listAll = await list("Item", { _id: { $in: ids } }, '_id quantity');
+
+    listAll.map((item1) => {
+        const match = itemList.find(item2 => item2._id?.toString() === item1._id?.toString());
+        if (match) {
+            if (match.count > item1.quantity) {
+                errors.push(`${match.name} not available`)
+            }
+            entries.push({ _id: match._id, quantity: (item1.quantity - match.count) });
+        }
+    });
+
+    if (errors.length === 0) {
+        return { entries, errors }
+    }
+    else {
+        return { entries, errors }
+    }
+}
 
 const insertOrder = async (req, res) => {
     let query = req.body;
@@ -20,19 +47,27 @@ const insertOrder = async (req, res) => {
         };
         const orderCountByToday = await Order.countDocuments(newQuery);
         const settings = await Misc.find({ location: req.user?.location });
+        const { entries, errors } = await itemAvailability(query?.itemList);
 
-        if (orderCountByToday <= settings[0]?.orderLimit) {
-            if (query._id) {
-                response = await update(modelName, query, { _id: query._id });
+        if (errors.length === 0 && entries.length > 0) {
+            if (orderCountByToday <= settings[0]?.orderLimit) {
+                if (query._id) {
+                    response = await update(modelName, query, { _id: query._id });
+                }
+                else {
+                    response = await create(modelName, { ...query, userId: req.user._id });
+                    await updateItemQuantity(entries);
+                }
+                res.status(200).json(MiscService.response(200, process.env.SUCCESS, { _id: response?._id || "" }));
             }
             else {
-                response = await create(modelName, { ...query, userId: req.user._id });
+                res.status(400).json(MiscService.response(400, `Exceeded order limit per day ${settings[0]?.orderLimit}`, {}));
             }
-            res.status(200).json(MiscService.response(200, process.env.SUCCESS, { _id: response?._id || "" }));
         }
         else {
-            res.status(400).json(MiscService.response(400, `Exceeded order limit per day ${settings[0]?.orderLimit}`, {}));
+            res.status(400).json(MiscService.response(400, `Currently some item is not available`, errors));
         }
+
     } catch (error) {
         console.log(error)
         res.status(400).json(MiscService.response(400, error.message || process.env.WRONG_SOMETHING, {}));

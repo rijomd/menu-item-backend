@@ -1,7 +1,10 @@
 
+const ObjectId = require('mongoose').Types.ObjectId;
+
 const MiscService = require("../../Services/MiscServices");
 const { create, update, list } = require("../../General/CrudOperations");
-const ObjectId = require('mongoose').Types.ObjectId;
+const { Item } = require("../../Model/itemModel");
+const { Error } = require('mongoose');
 
 const modelName = "Item";
 
@@ -49,6 +52,21 @@ const ItemList = async (req, res) => {
     }
 }
 
+const updateItemQuantity = async (items) => {
+    // const resp = await Item.updateMany({ _id: { $in: items.map(({ _id }) => _id) } }, items, { upsert: true });
+    const resp = await Promise.all(
+        items.map(({ _id, quantity }) => {
+            return Item.updateOne({ _id }, { $set: { quantity } }, { upsert: true });
+        })
+    );
+    if (resp) {
+        return "success"
+    }
+    else {
+        throw new Error("Update error")
+    }
+}
+
 module.exports = {
-    ItemList, insertItem
+    ItemList, insertItem, updateItemQuantity
 }

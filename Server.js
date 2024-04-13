@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require('path');
 const dotenv = require("dotenv");
+const rateLimit = require("express-rate-limit");
+
 const app = express();
 
 const { connectDB } = require('./Src/Config/db');
@@ -17,6 +19,15 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'Src', 'Images')));
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  // store: ... , // Redis, Memcached, etc. See below.
+})
+app.use(limiter)
+
 // connect MongoDB Using Mongoose
 connectDB();
 
@@ -27,6 +38,6 @@ app.use('/api', routes);
 app.use(notFound);
 app.use(errorHandler);
 
-const Server = app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server Running on  Port " + process.env.PORT);
 });
