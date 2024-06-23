@@ -114,7 +114,7 @@ const orderList = async (req, res) => {
             }
         }) : []
 
-        if (user.userRole === "Admin") {
+        if (user.userRole === "Admin" || user.userRole === "superAdmin") {
             lists = lists?.length > 0 ? lists.filter(order => order?.location.toString() === user?.location?.toString()) : [];
         }
 
