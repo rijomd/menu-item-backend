@@ -30,6 +30,11 @@ const modelsPath = [
         schemaName: "orderSchema",
         path: "orderModel"
     },
+    {
+        modalName: "Bill",
+        schemaName: "billSchema",
+        path: "billModel"
+    },
 ];
 
 module.exports = {

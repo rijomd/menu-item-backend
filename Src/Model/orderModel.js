@@ -9,7 +9,7 @@ const orderSchema = Schema(
         totalAmount: { type: Number },
         totalItems: { type: Number },
         cancelComment: { type: String },
-        itemList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Item" }], // need to change slightly 
+        itemList: [{ type: Object }], // need to change slightly 
         userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         status: { type: String, enum: ['Open', 'Closed', 'Cancelled', 'Approved'], default: 'Open' },
     },

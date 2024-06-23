@@ -53,7 +53,6 @@ const ItemList = async (req, res) => {
 }
 
 const updateItemQuantity = async (items) => {
-    // const resp = await Item.updateMany({ _id: { $in: items.map(({ _id }) => _id) } }, items, { upsert: true });
     const resp = await Promise.all(
         items.map(({ _id, quantity }) => {
             return Item.updateOne({ _id }, { $set: { quantity } }, { upsert: true });
