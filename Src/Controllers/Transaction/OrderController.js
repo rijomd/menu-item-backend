@@ -114,7 +114,7 @@ const orderList = async (req, res) => {
             }
         }) : []
 
-        if (user.userRole === "Admin" || user.userRole === "superAdmin") {
+        if (user.userRole === "Admin" ) {
             lists = lists?.length > 0 ? lists.filter(order => order?.location.toString() === user?.location?.toString()) : [];
         }
 
@@ -137,7 +137,12 @@ const closeOrder = async (req, res) => {
         if (result.nModified === 0) {
             res.status(404).json(MiscService.response(400, "No orders were updated", {}));
         }
-        const response = await create(billModel, { closedOn: new Date(), closedBy: req.user._id, document: req.file.filename });
+        const response = await create(billModel, {
+            closedOn: new Date(),
+            closedBy: req.user._id,
+            document: req.file.filename,
+            location: req.user?.location
+        });
         res.status(200).json(MiscService.response(200, "All Order closed successfully", response._id));
     } catch (error) {
         console.log(error)

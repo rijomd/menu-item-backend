@@ -6,17 +6,20 @@ const modelName = "Bill";
 
 const billList = async (req, res) => {
     const query = req?.query || {};
+    if(req.user?.location){
+        query['location'] = req.user?.location;
+    }
     try {
         const fields = '_id closedOn document closedBy ';
 
-        let billLists = await list(modelName, query, fields, ['closedBy']);
+        let billLists = await list(modelName, query, fields, ['location','closedBy']);
         let lists = [];
         lists = billLists?.length > 0 ? [...billLists].map((bill) => {
-            const { _id, document, closedBy, closedOn } = bill;
+            const { _id, document, closedBy, closedOn, location } = bill;
             return {
                 _id, closedOn, document,
                 ClosedBy: closedBy?.name,
-                location: closedBy?.location,
+                location: location?.name,
             }
         }) : []
 
